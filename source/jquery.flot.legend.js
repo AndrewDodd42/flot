@@ -34,7 +34,7 @@
             entry, labelHtml, iconHtml,
             j = 0,
             i,
-            pos = "",
+            pos = {},
             p = options.legend.position,
             m = options.legend.margin,
             shape = {
@@ -44,7 +44,7 @@
                 yPos: ''
             };
 
-        html[j++] = '<svg class="legendLayer" style="width:inherit;height:inherit;">';
+        html[j++] = '<svg class="legendLayer">';
         html[j++] = '<rect class="background" width="100%" height="100%"/>';
         html[j++] = svgShapeDefs;
 
@@ -125,16 +125,18 @@
             m = [m, m];
         }
 
+        pos['position'] = 'absolute';
+
         if (p.charAt(0) === 'n') {
-            pos += 'top:' + (m[1] + plotOffset.top) + 'px;';
+            pos['top'] = (m[1] + plotOffset.top) + 'px';
         } else if (p.charAt(0) === 's') {
-            pos += 'bottom:' + (m[1] + plotOffset.bottom) + 'px;';
+            pos['bottom'] = (m[1] + plotOffset.bottom) + 'px';
         }
 
         if (p.charAt(1) === 'e') {
-            pos += 'right:' + (m[0] + plotOffset.right) + 'px;';
+            pos['right'] = (m[0] + plotOffset.right) + 'px';
         } else if (p.charAt(1) === 'w') {
-            pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
+            pos['left'] = (m[0] + plotOffset.left) + 'px';
         }
 
         var width = 6;
@@ -145,7 +147,7 @@
         var legendEl,
             height = Math.ceil(entries.length / options.legend.noColumns) * 1.6;
         if (!options.legend.container) {
-            legendEl = $('<div class="legend" style="position:absolute;' + pos + '">' + html.join('') + '</div>').appendTo(placeholder);
+            legendEl = $('<div class="legend">' + html.join('') + '</div>').css(pos).appendTo(placeholder);
             legendEl.css('width', width + 'px');
             legendEl.css('height', height + 'em');
             legendEl.css('pointerEvents', 'none');
@@ -154,6 +156,10 @@
             options.legend.container.style.width = width + 'px';
             options.legend.container.style.height = height + 'em';
         }
+
+        legendEl.find('svg.legendLayer').css({
+            'width': 'inherit', 'height': 'inherit'
+        })
     }
 
     // Generate html for a shape
